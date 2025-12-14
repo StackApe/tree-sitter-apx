@@ -51,6 +51,10 @@
           "named": true
         },
         {
+          "type": "identifier",
+          "named": true
+        },
+        {
           "type": "primary_expression",
           "named": true
         }

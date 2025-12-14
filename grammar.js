@@ -518,11 +518,12 @@ module.exports = grammar({
       'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'bold', 'dim', 'underline',
     ),
 
-    // Arguments
+    // Arguments - includes bare identifiers for commands like "sort-by name"
     argument: $ => choice(
       $.flag_with_value,
       $.flag,
       $.primary_expression,
+      $.identifier,
     ),
 
     // Flag with space-separated value: --limit 5, --file "path"
