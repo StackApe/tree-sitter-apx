@@ -201,6 +201,10 @@
           "named": true
         },
         {
+          "type": "variable_assignment",
+          "named": true
+        },
+        {
           "type": "while_statement",
           "named": true
         }
@@ -302,6 +306,10 @@
           "named": true
         },
         {
+          "type": "variable_assignment",
+          "named": true
+        },
+        {
           "type": "while_statement",
           "named": true
         }
@@ -356,6 +364,10 @@
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "method_call",
           "named": true
         }
       ]
@@ -412,6 +424,25 @@
     }
   },
   {
+    "type": "field_access",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "flag",
     "named": true,
     "fields": {}
@@ -450,6 +481,10 @@
         },
         {
           "type": "unary_expression",
+          "named": true
+        },
+        {
+          "type": "variable",
           "named": true
         }
       ]
@@ -715,6 +750,21 @@
     }
   },
   {
+    "type": "method_call",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "module_path",
     "named": true,
     "fields": {},
@@ -882,6 +932,10 @@
         },
         {
           "type": "closure",
+          "named": true
+        },
+        {
+          "type": "field_access",
           "named": true
         },
         {
@@ -1101,6 +1155,10 @@
           "named": true
         },
         {
+          "type": "variable_assignment",
+          "named": true
+        },
+        {
           "type": "while_statement",
           "named": true
         }
@@ -1237,6 +1295,41 @@
     }
   },
   {
+    "type": "variable_assignment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "command_expression",
+          "named": true
+        },
+        {
+          "type": "pipeline",
+          "named": true
+        },
+        {
+          "type": "primary_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
+        },
+        {
+          "type": "variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "while_statement",
     "named": true,
     "fields": {},
@@ -1333,6 +1426,10 @@
   },
   {
     "type": "-",
+    "named": false
+  },
+  {
+    "type": ".",
     "named": false
   },
   {

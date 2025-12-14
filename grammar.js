@@ -13,6 +13,7 @@ const PREC = {
   MULT: 7,
   UNARY: 8,
   CALL: 9,
+  MEMBER: 10,
 };
 
 module.exports = grammar({
@@ -37,6 +38,7 @@ module.exports = grammar({
 
     _statement: $ => choice(
       $.assignment,
+      $.variable_assignment,
       $.if_statement,
       $.for_statement,
       $.while_statement,
@@ -80,6 +82,7 @@ module.exports = grammar({
       $.string,
       $.boolean,
       $.null,
+      $.field_access,
       $.variable,
       $.list,
       $.record,
@@ -183,6 +186,12 @@ module.exports = grammar({
     env_variable: $ => /\$env\.[a-zA-Z_][a-zA-Z0-9_]*/,
     special_variable: $ => choice('$it', '$_', '$err'),
 
+    // Field access: $var.field or $it.name
+    field_access: $ => prec.left(PREC.MEMBER, seq(
+      $.variable,
+      repeat1(seq('.', $.identifier)),
+    )),
+
     // Range
     range: $ => seq(
       $.integer,
@@ -257,7 +266,7 @@ module.exports = grammar({
 
     for_statement: $ => seq(
       'for',
-      $.identifier,
+      choice($.variable, $.identifier),
       'in',
       $._expression,
       $.block,
@@ -383,13 +392,20 @@ module.exports = grammar({
     break_statement: $ => 'break',
     continue_statement: $ => 'continue',
 
-    // Assignment
+    // Assignment with keyword (let, const, set)
     assignment: $ => seq(
       choice('let', 'const', 'set'),
       $.identifier,
       '=',
       $._expression,
     ),
+
+    // Bare variable assignment: $var = value
+    variable_assignment: $ => prec.right(seq(
+      $.variable,
+      '=',
+      $._expression,
+    )),
 
     // Command expression - any identifier followed by arguments
     // This handles both built-in and user-defined commands
@@ -402,6 +418,14 @@ module.exports = grammar({
     // Command names - built-in commands get special highlighting
     command_name: $ => choice(
       $.builtin_command,
+      $.method_call,
+      $.identifier,
+    ),
+
+    // Method-style calls: ai.ask, git.status, etc.
+    method_call: $ => seq(
+      $.identifier,
+      '.',
       $.identifier,
     ),
 

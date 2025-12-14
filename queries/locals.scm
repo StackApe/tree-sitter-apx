@@ -11,6 +11,9 @@
 (assignment
   (identifier) @local.definition)
 
+(variable_assignment
+  (variable) @local.definition)
+
 (parameter
   (identifier) @local.definition)
 

@@ -26,6 +26,14 @@
 (env_variable) @variable.builtin
 (special_variable) @variable.builtin
 
+; Field access: $var.field
+(field_access
+  (identifier) @property)
+
+; Method calls: ai.ask
+(method_call
+  (identifier) @function.call)
+
 ; Keywords - Control flow (using actual grammar keywords)
 "if" @keyword.control
 "else" @keyword.control
