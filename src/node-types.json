@@ -47,6 +47,10 @@
           "named": true
         },
         {
+          "type": "flag_with_value",
+          "named": true
+        },
+        {
           "type": "primary_expression",
           "named": true
         }
@@ -445,7 +449,48 @@
   {
     "type": "flag",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "long_flag",
+          "named": true
+        },
+        {
+          "type": "short_flag",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "flag_with_value",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "long_flag",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "for_statement",
@@ -631,6 +676,29 @@
         },
         {
           "type": "unary_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "long_flag",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         }
       ]
@@ -2579,6 +2647,10 @@
   {
     "type": "shl",
     "named": false
+  },
+  {
+    "type": "short_flag",
+    "named": true
   },
   {
     "type": "shr",

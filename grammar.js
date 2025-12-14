@@ -28,6 +28,7 @@ module.exports = grammar({
     [$.command_expression],
     [$.record, $.closure, $.block],
     [$.closure, $.block],
+    [$.flag_with_value, $.flag],
   ],
 
   word: $ => $.identifier,
@@ -519,14 +520,30 @@ module.exports = grammar({
 
     // Arguments
     argument: $ => choice(
+      $.flag_with_value,
       $.flag,
       $.primary_expression,
     ),
 
+    // Flag with space-separated value: --limit 5, --file "path"
+    flag_with_value: $ => prec.right(2, seq(
+      $.long_flag,
+      choice($.number, $.string, $.identifier),
+    )),
+
     flag: $ => choice(
-      /--[a-zA-Z][a-zA-Z0-9-]*/,
-      /-[a-zA-Z]/,
+      $.long_flag,
+      $.short_flag,
     ),
+
+    // Long flags: --all, --limit, --limit=5
+    long_flag: $ => seq(
+      /--[a-zA-Z][a-zA-Z0-9-]*/,
+      optional(seq('=', choice($.number, $.string, $.identifier))),
+    ),
+
+    // Short flags: -l, -la, -rf (multiple letters allowed)
+    short_flag: $ => /-[a-zA-Z]+/,
 
     // Identifier
     identifier: $ => /[a-zA-Z_][a-zA-Z0-9_-]*/,

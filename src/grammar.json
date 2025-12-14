@@ -2951,6 +2951,10 @@
       "members": [
         {
           "type": "SYMBOL",
+          "name": "flag_with_value"
+        },
+        {
+          "type": "SYMBOL",
           "name": "flag"
         },
         {
@@ -2959,18 +2963,95 @@
         }
       ]
     },
+    "flag_with_value": {
+      "type": "PREC_RIGHT",
+      "value": 2,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "long_flag"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "number"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "string"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            ]
+          }
+        ]
+      }
+    },
     "flag": {
       "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "long_flag"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "short_flag"
+        }
+      ]
+    },
+    "long_flag": {
+      "type": "SEQ",
       "members": [
         {
           "type": "PATTERN",
           "value": "--[a-zA-Z][a-zA-Z0-9-]*"
         },
         {
-          "type": "PATTERN",
-          "value": "-[a-zA-Z]"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "="
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "number"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "string"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
+    },
+    "short_flag": {
+      "type": "PATTERN",
+      "value": "-[a-zA-Z]+"
     },
     "identifier": {
       "type": "PATTERN",
@@ -2999,6 +3080,10 @@
     [
       "closure",
       "block"
+    ],
+    [
+      "flag_with_value",
+      "flag"
     ]
   ],
   "precedences": [],

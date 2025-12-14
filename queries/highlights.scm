@@ -142,7 +142,8 @@
   (identifier) @namespace)
 
 ; Flags
-(flag) @attribute
+(long_flag) @attribute
+(short_flag) @attribute
 
 ; Built-in commands
 (builtin_command) @function.builtin
