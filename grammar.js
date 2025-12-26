@@ -70,8 +70,28 @@ module.exports = grammar({
       $._expression,
     ),
 
-    // Comments
-    comment: $ => token(seq('#', /.*/)),
+    // Comments - single line (#) and multi-line (### ... ###)
+    comment: $ => choice(
+      $.line_comment,
+      $.block_comment,
+    ),
+
+    // Single line comment: # to end of line (but not ### which starts block)
+    line_comment: $ => token(prec(1, seq('#', optional(choice(
+      seq(/[^#\n]/, /.*/),  // # followed by non-# then anything
+      seq('#', /[^#]/, /.*/),  // ## followed by non-# then anything
+    ))))),
+
+    // Multi-line block comment: ### ... ###
+    block_comment: $ => token(prec(2, seq(
+      '###',
+      repeat(choice(
+        /[^#]+/,           // any non-# characters
+        /#[^#]/,           // single # not followed by #
+        /##[^#]/,          // double ## not followed by #
+      )),
+      '###'
+    ))),
 
     // Expressions
     _expression: $ => choice(

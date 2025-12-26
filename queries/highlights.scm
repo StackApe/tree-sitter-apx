@@ -1,7 +1,9 @@
 ; ApX Tree-sitter highlight queries for Neovim
 
-; Comments
+; Comments (single-line and multi-line block comments)
 (comment) @comment
+(line_comment) @comment
+(block_comment) @comment
 
 ; Strings
 (double_string) @string
