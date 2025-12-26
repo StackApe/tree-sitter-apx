@@ -157,7 +157,19 @@
           "named": true
         },
         {
+          "type": "compound_assignment",
+          "named": true
+        },
+        {
           "type": "continue_statement",
+          "named": true
+        },
+        {
+          "type": "decorated_definition",
+          "named": true
+        },
+        {
+          "type": "enum_definition",
           "named": true
         },
         {
@@ -177,11 +189,19 @@
           "named": true
         },
         {
+          "type": "loop_statement",
+          "named": true
+        },
+        {
           "type": "macro_definition",
           "named": true
         },
         {
           "type": "match_statement",
+          "named": true
+        },
+        {
+          "type": "object_definition",
           "named": true
         },
         {
@@ -194,6 +214,10 @@
         },
         {
           "type": "return_statement",
+          "named": true
+        },
+        {
+          "type": "source_statement",
           "named": true
         },
         {
@@ -223,6 +247,41 @@
     "type": "boolean",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "brace_expansion",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "command_expression",
+          "named": true
+        },
+        {
+          "type": "integer",
+          "named": true
+        },
+        {
+          "type": "pipeline",
+          "named": true
+        },
+        {
+          "type": "primary_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "builtin_command",
@@ -262,7 +321,19 @@
           "named": true
         },
         {
+          "type": "compound_assignment",
+          "named": true
+        },
+        {
           "type": "continue_statement",
+          "named": true
+        },
+        {
+          "type": "decorated_definition",
+          "named": true
+        },
+        {
+          "type": "enum_definition",
           "named": true
         },
         {
@@ -282,11 +353,19 @@
           "named": true
         },
         {
+          "type": "loop_statement",
+          "named": true
+        },
+        {
           "type": "macro_definition",
           "named": true
         },
         {
           "type": "match_statement",
+          "named": true
+        },
+        {
+          "type": "object_definition",
           "named": true
         },
         {
@@ -299,6 +378,10 @@
         },
         {
           "type": "return_statement",
+          "named": true
+        },
+        {
+          "type": "source_statement",
           "named": true
         },
         {
@@ -333,7 +416,7 @@
       "required": false,
       "types": [
         {
-          "type": "identifier",
+          "type": "typed_parameter",
           "named": true
         }
       ]
@@ -376,6 +459,118 @@
         },
         {
           "type": "method_call",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "command_substitution",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "command_expression",
+          "named": true
+        },
+        {
+          "type": "pipeline",
+          "named": true
+        },
+        {
+          "type": "primary_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "compound_assignment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "command_expression",
+          "named": true
+        },
+        {
+          "type": "pipeline",
+          "named": true
+        },
+        {
+          "type": "primary_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
+        },
+        {
+          "type": "variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "decorated_definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "decorator",
+          "named": true
+        },
+        {
+          "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "test_definition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "decorator",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         }
       ]
@@ -426,6 +621,21 @@
       "types": [
         {
           "type": "block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "enum_definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
           "named": true
         }
       ]
@@ -558,6 +768,10 @@
         {
           "type": "parameter_list",
           "named": true
+        },
+        {
+          "type": "type_hint",
+          "named": true
         }
       ]
     }
@@ -650,6 +864,83 @@
         {
           "type": "module_path",
           "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "input_process_substitution",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "command_expression",
+          "named": true
+        },
+        {
+          "type": "pipeline",
+          "named": true
+        },
+        {
+          "type": "primary_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "lambda",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "lambda_parameter",
+          "named": true
+        },
+        {
+          "type": "type_hint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "lambda_parameter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "type_hint",
+          "named": true
+        },
+        {
+          "type": "variable",
+          "named": true
         }
       ]
     }
@@ -703,6 +994,21 @@
         },
         {
           "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "loop_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
           "named": true
         }
       ]
@@ -852,6 +1158,11 @@
     }
   },
   {
+    "type": "null",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "number",
     "named": true,
     "fields": {},
@@ -877,6 +1188,79 @@
         },
         {
           "type": "octal_number",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "object_definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "object_field",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "object_field",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "parameter_list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "output_process_substitution",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "command_expression",
+          "named": true
+        },
+        {
+          "type": "pipeline",
+          "named": true
+        },
+        {
+          "type": "primary_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
           "named": true
         }
       ]
@@ -911,7 +1295,15 @@
           "named": true
         },
         {
+          "type": "type_hint",
+          "named": true
+        },
+        {
           "type": "unary_expression",
+          "named": true
+        },
+        {
+          "type": "variable",
           "named": true
         }
       ]
@@ -1003,11 +1395,27 @@
           "named": true
         },
         {
+          "type": "brace_expansion",
+          "named": true
+        },
+        {
           "type": "closure",
           "named": true
         },
         {
+          "type": "command_substitution",
+          "named": true
+        },
+        {
           "type": "field_access",
+          "named": true
+        },
+        {
+          "type": "input_process_substitution",
+          "named": true
+        },
+        {
+          "type": "lambda",
           "named": true
         },
         {
@@ -1023,6 +1431,10 @@
           "named": true
         },
         {
+          "type": "output_process_substitution",
+          "named": true
+        },
+        {
           "type": "parenthesized_expression",
           "named": true
         },
@@ -1035,7 +1447,15 @@
           "named": true
         },
         {
+          "type": "set",
+          "named": true
+        },
+        {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "tuple",
           "named": true
         },
         {
@@ -1147,6 +1567,37 @@
     }
   },
   {
+    "type": "set",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "command_expression",
+          "named": true
+        },
+        {
+          "type": "pipeline",
+          "named": true
+        },
+        {
+          "type": "primary_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "source_file",
     "named": true,
     "fields": {},
@@ -1175,7 +1626,19 @@
           "named": true
         },
         {
+          "type": "compound_assignment",
+          "named": true
+        },
+        {
           "type": "continue_statement",
+          "named": true
+        },
+        {
+          "type": "decorated_definition",
+          "named": true
+        },
+        {
+          "type": "enum_definition",
           "named": true
         },
         {
@@ -1195,11 +1658,19 @@
           "named": true
         },
         {
+          "type": "loop_statement",
+          "named": true
+        },
+        {
           "type": "macro_definition",
           "named": true
         },
         {
           "type": "match_statement",
+          "named": true
+        },
+        {
+          "type": "object_definition",
           "named": true
         },
         {
@@ -1212,6 +1683,10 @@
         },
         {
           "type": "return_statement",
+          "named": true
+        },
+        {
+          "type": "source_statement",
           "named": true
         },
         {
@@ -1232,6 +1707,25 @@
         },
         {
           "type": "while_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "source_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         }
       ]
@@ -1311,6 +1805,80 @@
         },
         {
           "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "tuple",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "command_expression",
+          "named": true
+        },
+        {
+          "type": "pipeline",
+          "named": true
+        },
+        {
+          "type": "primary_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_hint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "type_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_name",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "typed_parameter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "type_hint",
+          "named": true
+        },
+        {
+          "type": "variable",
           "named": true
         }
       ]
@@ -1445,6 +2013,10 @@
     "named": false
   },
   {
+    "type": "!~",
+    "named": false
+  },
+  {
     "type": "\"",
     "named": false
   },
@@ -1454,6 +2026,10 @@
   },
   {
     "type": "$",
+    "named": false
+  },
+  {
+    "type": "$(",
     "named": false
   },
   {
@@ -1473,6 +2049,10 @@
     "named": false
   },
   {
+    "type": "%=",
+    "named": false
+  },
+  {
     "type": "&&",
     "named": false
   },
@@ -1489,7 +2069,19 @@
     "named": false
   },
   {
+    "type": "*=",
+    "named": false
+  },
+  {
     "type": "+",
+    "named": false
+  },
+  {
+    "type": "++",
+    "named": false
+  },
+  {
+    "type": "+=",
     "named": false
   },
   {
@@ -1498,6 +2090,14 @@
   },
   {
     "type": "-",
+    "named": false
+  },
+  {
+    "type": "-=",
+    "named": false
+  },
+  {
+    "type": "->",
     "named": false
   },
   {
@@ -1517,6 +2117,10 @@
     "named": false
   },
   {
+    "type": "/=",
+    "named": false
+  },
+  {
     "type": ":",
     "named": false
   },
@@ -1526,6 +2130,10 @@
   },
   {
     "type": "<",
+    "named": false
+  },
+  {
+    "type": "<(",
     "named": false
   },
   {
@@ -1545,11 +2153,31 @@
     "named": false
   },
   {
+    "type": "=~",
+    "named": false
+  },
+  {
     "type": ">",
     "named": false
   },
   {
+    "type": ">(",
+    "named": false
+  },
+  {
     "type": ">=",
+    "named": false
+  },
+  {
+    "type": "?",
+    "named": false
+  },
+  {
+    "type": "??",
+    "named": false
+  },
+  {
+    "type": "@",
     "named": false
   },
   {
@@ -1581,15 +2209,11 @@
     "named": false
   },
   {
-    "type": "ai-ask",
+    "type": "after",
     "named": false
   },
   {
-    "type": "ai-models",
-    "named": false
-  },
-  {
-    "type": "ala",
+    "type": "alert",
     "named": false
   },
   {
@@ -1610,6 +2234,14 @@
   },
   {
     "type": "and",
+    "named": false
+  },
+  {
+    "type": "angle",
+    "named": false
+  },
+  {
+    "type": "ansi-test",
     "named": false
   },
   {
@@ -1637,10 +2269,6 @@
     "named": false
   },
   {
-    "type": "assert-eq",
-    "named": false
-  },
-  {
     "type": "audio-beep",
     "named": false
   },
@@ -1657,23 +2285,51 @@
     "named": false
   },
   {
-    "type": "await",
-    "named": false
-  },
-  {
     "type": "band",
     "named": false
   },
   {
-    "type": "base64-decode",
-    "named": false
-  },
-  {
-    "type": "base64-encode",
+    "type": "basename",
     "named": false
   },
   {
     "type": "beep",
+    "named": false
+  },
+  {
+    "type": "bg-black",
+    "named": false
+  },
+  {
+    "type": "bg-blue",
+    "named": false
+  },
+  {
+    "type": "bg-cyan",
+    "named": false
+  },
+  {
+    "type": "bg-green",
+    "named": false
+  },
+  {
+    "type": "bg-magenta",
+    "named": false
+  },
+  {
+    "type": "bg-red",
+    "named": false
+  },
+  {
+    "type": "bg-rgb",
+    "named": false
+  },
+  {
+    "type": "bg-white",
+    "named": false
+  },
+  {
+    "type": "bg-yellow",
     "named": false
   },
   {
@@ -1685,11 +2341,7 @@
     "named": true
   },
   {
-    "type": "blake2b",
-    "named": false
-  },
-  {
-    "type": "blake2s",
+    "type": "blink",
     "named": false
   },
   {
@@ -1705,7 +2357,15 @@
     "named": false
   },
   {
+    "type": "bool",
+    "named": false
+  },
+  {
     "type": "bor",
+    "named": false
+  },
+  {
+    "type": "brace-expand",
     "named": false
   },
   {
@@ -1713,7 +2373,27 @@
     "named": true
   },
   {
+    "type": "brol",
+    "named": false
+  },
+  {
+    "type": "bror",
+    "named": false
+  },
+  {
+    "type": "browser-confirm",
+    "named": false
+  },
+  {
     "type": "browser-open",
+    "named": false
+  },
+  {
+    "type": "bshl",
+    "named": false
+  },
+  {
+    "type": "bshr",
     "named": false
   },
   {
@@ -1749,11 +2429,115 @@
     "named": false
   },
   {
+    "type": "btw",
+    "named": false
+  },
+  {
     "type": "bxor",
     "named": false
   },
   {
+    "type": "byte-len",
+    "named": false
+  },
+  {
+    "type": "bytes",
+    "named": false
+  },
+  {
+    "type": "bytes-at",
+    "named": false
+  },
+  {
+    "type": "bytes-concat",
+    "named": false
+  },
+  {
+    "type": "bytes-find",
+    "named": false
+  },
+  {
+    "type": "bytes-replace",
+    "named": false
+  },
+  {
+    "type": "bytes-slice",
+    "named": false
+  },
+  {
     "type": "caesar",
+    "named": false
+  },
+  {
+    "type": "cal",
+    "named": false
+  },
+  {
+    "type": "canvas-alpha",
+    "named": false
+  },
+  {
+    "type": "canvas-circle",
+    "named": false
+  },
+  {
+    "type": "canvas-clear",
+    "named": false
+  },
+  {
+    "type": "canvas-fill",
+    "named": false
+  },
+  {
+    "type": "canvas-image",
+    "named": false
+  },
+  {
+    "type": "canvas-line",
+    "named": false
+  },
+  {
+    "type": "canvas-mouse",
+    "named": false
+  },
+  {
+    "type": "canvas-rect",
+    "named": false
+  },
+  {
+    "type": "canvas-resize",
+    "named": false
+  },
+  {
+    "type": "canvas-restore",
+    "named": false
+  },
+  {
+    "type": "canvas-rotate",
+    "named": false
+  },
+  {
+    "type": "canvas-save",
+    "named": false
+  },
+  {
+    "type": "canvas-scale",
+    "named": false
+  },
+  {
+    "type": "canvas-size",
+    "named": false
+  },
+  {
+    "type": "canvas-sprite",
+    "named": false
+  },
+  {
+    "type": "canvas-text",
+    "named": false
+  },
+  {
+    "type": "canvas-translate",
     "named": false
   },
   {
@@ -1789,7 +2573,27 @@
     "named": false
   },
   {
+    "type": "chgrp",
+    "named": false
+  },
+  {
+    "type": "chmod",
+    "named": false
+  },
+  {
     "type": "choose",
+    "named": false
+  },
+  {
+    "type": "chown",
+    "named": false
+  },
+  {
+    "type": "chunks",
+    "named": false
+  },
+  {
+    "type": "clamp",
     "named": false
   },
   {
@@ -1809,6 +2613,26 @@
     "named": false
   },
   {
+    "type": "closure",
+    "named": false
+  },
+  {
+    "type": "collide-circle",
+    "named": false
+  },
+  {
+    "type": "collide-point",
+    "named": false
+  },
+  {
+    "type": "collide-rect",
+    "named": false
+  },
+  {
+    "type": "color",
+    "named": false
+  },
+  {
     "type": "comment",
     "named": true
   },
@@ -1818,6 +2642,10 @@
   },
   {
     "type": "confirm",
+    "named": false
+  },
+  {
+    "type": "console-log",
     "named": false
   },
   {
@@ -1849,7 +2677,19 @@
     "named": false
   },
   {
-    "type": "crc32",
+    "type": "cursor-hide",
+    "named": false
+  },
+  {
+    "type": "cursor-move",
+    "named": false
+  },
+  {
+    "type": "cursor-show",
+    "named": false
+  },
+  {
+    "type": "cut",
     "named": false
   },
   {
@@ -1865,6 +2705,14 @@
     "named": false
   },
   {
+    "type": "date-diff",
+    "named": false
+  },
+  {
+    "type": "date-parse",
+    "named": false
+  },
+  {
     "type": "debug",
     "named": false
   },
@@ -1873,11 +2721,27 @@
     "named": false
   },
   {
+    "type": "deg-to-rad",
+    "named": false
+  },
+  {
+    "type": "describe",
+    "named": false
+  },
+  {
     "type": "detect-encoding",
     "named": false
   },
   {
+    "type": "diff",
+    "named": false
+  },
+  {
     "type": "dim",
+    "named": false
+  },
+  {
+    "type": "dirname",
     "named": false
   },
   {
@@ -1889,7 +2753,51 @@
     "named": false
   },
   {
+    "type": "distance",
+    "named": false
+  },
+  {
     "type": "dns-lookup",
+    "named": false
+  },
+  {
+    "type": "dom-attr",
+    "named": false
+  },
+  {
+    "type": "dom-class-add",
+    "named": false
+  },
+  {
+    "type": "dom-class-remove",
+    "named": false
+  },
+  {
+    "type": "dom-create",
+    "named": false
+  },
+  {
+    "type": "dom-get",
+    "named": false
+  },
+  {
+    "type": "dom-html",
+    "named": false
+  },
+  {
+    "type": "dom-query",
+    "named": false
+  },
+  {
+    "type": "dom-remove",
+    "named": false
+  },
+  {
+    "type": "dom-set",
+    "named": false
+  },
+  {
+    "type": "dom-style",
     "named": false
   },
   {
@@ -1898,6 +2806,22 @@
   },
   {
     "type": "download",
+    "named": false
+  },
+  {
+    "type": "duration",
+    "named": false
+  },
+  {
+    "type": "duration-ms",
+    "named": false
+  },
+  {
+    "type": "duration-ns",
+    "named": false
+  },
+  {
+    "type": "duration-secs",
     "named": false
   },
   {
@@ -1910,6 +2834,10 @@
   },
   {
     "type": "edit",
+    "named": false
+  },
+  {
+    "type": "elapsed",
     "named": false
   },
   {
@@ -1941,6 +2869,10 @@
     "named": false
   },
   {
+    "type": "enum",
+    "named": false
+  },
+  {
     "type": "enumerate",
     "named": false
   },
@@ -1951,6 +2883,14 @@
   {
     "type": "env_variable",
     "named": true
+  },
+  {
+    "type": "error",
+    "named": false
+  },
+  {
+    "type": "every",
+    "named": false
   },
   {
     "type": "exec",
@@ -1965,7 +2905,15 @@
     "named": false
   },
   {
+    "type": "explore",
+    "named": false
+  },
+  {
     "type": "false",
+    "named": false
+  },
+  {
+    "type": "fetch",
     "named": false
   },
   {
@@ -1977,7 +2925,31 @@
     "named": false
   },
   {
+    "type": "file-test",
+    "named": false
+  },
+  {
     "type": "file-type",
+    "named": false
+  },
+  {
+    "type": "filesize",
+    "named": false
+  },
+  {
+    "type": "filesize-bytes",
+    "named": false
+  },
+  {
+    "type": "filesize-kb",
+    "named": false
+  },
+  {
+    "type": "filesize-mb",
+    "named": false
+  },
+  {
+    "type": "filter",
     "named": false
   },
   {
@@ -2013,6 +2985,10 @@
     "named": true
   },
   {
+    "type": "float",
+    "named": false
+  },
+  {
     "type": "floor",
     "named": false
   },
@@ -2037,11 +3013,39 @@
     "named": false
   },
   {
+    "type": "from-html",
+    "named": false
+  },
+  {
+    "type": "from-ini",
+    "named": false
+  },
+  {
     "type": "from-json",
     "named": false
   },
   {
+    "type": "from-msgpack",
+    "named": false
+  },
+  {
+    "type": "from-ssv",
+    "named": false
+  },
+  {
+    "type": "from-table",
+    "named": false
+  },
+  {
+    "type": "from-timestamp",
+    "named": false
+  },
+  {
     "type": "get",
+    "named": false
+  },
+  {
+    "type": "getopts",
     "named": false
   },
   {
@@ -2073,11 +3077,11 @@
     "named": false
   },
   {
-    "type": "git-stash",
+    "type": "git-status",
     "named": false
   },
   {
-    "type": "git-status",
+    "type": "glob",
     "named": false
   },
   {
@@ -2093,6 +3097,10 @@
     "named": false
   },
   {
+    "type": "has",
+    "named": false
+  },
+  {
     "type": "hash-file",
     "named": false
   },
@@ -2101,11 +3109,19 @@
     "named": false
   },
   {
+    "type": "head",
+    "named": false
+  },
+  {
     "type": "headers",
     "named": false
   },
   {
     "type": "help",
+    "named": false
+  },
+  {
+    "type": "hex",
     "named": false
   },
   {
@@ -2125,7 +3141,19 @@
     "named": true
   },
   {
-    "type": "hmac-sha256",
+    "type": "history-back",
+    "named": false
+  },
+  {
+    "type": "history-forward",
+    "named": false
+  },
+  {
+    "type": "history-search",
+    "named": false
+  },
+  {
+    "type": "home",
     "named": false
   },
   {
@@ -2137,11 +3165,35 @@
     "named": false
   },
   {
+    "type": "http-delete",
+    "named": false
+  },
+  {
     "type": "http-get",
     "named": false
   },
   {
+    "type": "http-head",
+    "named": false
+  },
+  {
+    "type": "http-options",
+    "named": false
+  },
+  {
+    "type": "http-patch",
+    "named": false
+  },
+  {
     "type": "http-post",
+    "named": false
+  },
+  {
+    "type": "http-put",
+    "named": false
+  },
+  {
+    "type": "http-request",
     "named": false
   },
   {
@@ -2157,78 +3209,6 @@
     "named": false
   },
   {
-    "type": "img-blur",
-    "named": false
-  },
-  {
-    "type": "img-brighten",
-    "named": false
-  },
-  {
-    "type": "img-close",
-    "named": false
-  },
-  {
-    "type": "img-contrast",
-    "named": false
-  },
-  {
-    "type": "img-crop",
-    "named": false
-  },
-  {
-    "type": "img-flip-h",
-    "named": false
-  },
-  {
-    "type": "img-flip-v",
-    "named": false
-  },
-  {
-    "type": "img-grayscale",
-    "named": false
-  },
-  {
-    "type": "img-info",
-    "named": false
-  },
-  {
-    "type": "img-invert",
-    "named": false
-  },
-  {
-    "type": "img-list",
-    "named": false
-  },
-  {
-    "type": "img-open",
-    "named": false
-  },
-  {
-    "type": "img-pixel",
-    "named": false
-  },
-  {
-    "type": "img-resize",
-    "named": false
-  },
-  {
-    "type": "img-rotate",
-    "named": false
-  },
-  {
-    "type": "img-save",
-    "named": false
-  },
-  {
-    "type": "img-size",
-    "named": false
-  },
-  {
-    "type": "img-thumbnail",
-    "named": false
-  },
-  {
     "type": "import",
     "named": false
   },
@@ -2237,7 +3217,43 @@
     "named": false
   },
   {
+    "type": "index-of",
+    "named": false
+  },
+  {
     "type": "input",
+    "named": false
+  },
+  {
+    "type": "input-checked",
+    "named": false
+  },
+  {
+    "type": "input-focus",
+    "named": false
+  },
+  {
+    "type": "input-listen",
+    "named": false
+  },
+  {
+    "type": "input-set",
+    "named": false
+  },
+  {
+    "type": "input-value",
+    "named": false
+  },
+  {
+    "type": "insert-at",
+    "named": false
+  },
+  {
+    "type": "inspect",
+    "named": false
+  },
+  {
+    "type": "int",
     "named": false
   },
   {
@@ -2257,11 +3273,99 @@
     "named": false
   },
   {
+    "type": "is-bool",
+    "named": false
+  },
+  {
+    "type": "is-closure",
+    "named": false
+  },
+  {
+    "type": "is-defined",
+    "named": false
+  },
+  {
     "type": "is-dir",
     "named": false
   },
   {
+    "type": "is-duration",
+    "named": false
+  },
+  {
+    "type": "is-empty",
+    "named": false
+  },
+  {
+    "type": "is-enum",
+    "named": false
+  },
+  {
     "type": "is-file",
+    "named": false
+  },
+  {
+    "type": "is-filesize",
+    "named": false
+  },
+  {
+    "type": "is-float",
+    "named": false
+  },
+  {
+    "type": "is-int",
+    "named": false
+  },
+  {
+    "type": "is-list",
+    "named": false
+  },
+  {
+    "type": "is-null",
+    "named": false
+  },
+  {
+    "type": "is-number",
+    "named": false
+  },
+  {
+    "type": "is-path",
+    "named": false
+  },
+  {
+    "type": "is-record",
+    "named": false
+  },
+  {
+    "type": "is-set",
+    "named": false
+  },
+  {
+    "type": "is-string",
+    "named": false
+  },
+  {
+    "type": "is-symlink",
+    "named": false
+  },
+  {
+    "type": "is-table",
+    "named": false
+  },
+  {
+    "type": "is-task",
+    "named": false
+  },
+  {
+    "type": "is-terminal",
+    "named": false
+  },
+  {
+    "type": "is-tuple",
+    "named": false
+  },
+  {
+    "type": "italic",
     "named": false
   },
   {
@@ -2270,6 +3374,22 @@
   },
   {
     "type": "jwt-decode",
+    "named": false
+  },
+  {
+    "type": "key-available",
+    "named": false
+  },
+  {
+    "type": "key-down",
+    "named": false
+  },
+  {
+    "type": "key-pressed",
+    "named": false
+  },
+  {
+    "type": "key-wait",
     "named": false
   },
   {
@@ -2289,7 +3409,15 @@
     "named": false
   },
   {
+    "type": "len",
+    "named": false
+  },
+  {
     "type": "length",
+    "named": false
+  },
+  {
+    "type": "lerp",
     "named": false
   },
   {
@@ -2301,7 +3429,15 @@
     "named": false
   },
   {
+    "type": "list",
+    "named": false
+  },
+  {
     "type": "ll",
+    "named": false
+  },
+  {
+    "type": "ln",
     "named": false
   },
   {
@@ -2309,11 +3445,43 @@
     "named": false
   },
   {
+    "type": "local-get",
+    "named": false
+  },
+  {
+    "type": "local-remove",
+    "named": false
+  },
+  {
+    "type": "local-set",
+    "named": false
+  },
+  {
+    "type": "location",
+    "named": false
+  },
+  {
+    "type": "location-hash",
+    "named": false
+  },
+  {
+    "type": "location-host",
+    "named": false
+  },
+  {
+    "type": "location-path",
+    "named": false
+  },
+  {
+    "type": "location-search",
+    "named": false
+  },
+  {
     "type": "log",
     "named": false
   },
   {
-    "type": "log10",
+    "type": "loop",
     "named": false
   },
   {
@@ -2330,6 +3498,14 @@
   },
   {
     "type": "magenta",
+    "named": false
+  },
+  {
+    "type": "map",
+    "named": false
+  },
+  {
+    "type": "mapfile",
     "named": false
   },
   {
@@ -2361,10 +3537,6 @@
     "named": false
   },
   {
-    "type": "md5",
-    "named": false
-  },
-  {
     "type": "mem-info",
     "named": false
   },
@@ -2381,7 +3553,27 @@
     "named": false
   },
   {
+    "type": "mouse-down",
+    "named": false
+  },
+  {
+    "type": "mouse-pos",
+    "named": false
+  },
+  {
+    "type": "mouse-x",
+    "named": false
+  },
+  {
+    "type": "mouse-y",
+    "named": false
+  },
+  {
     "type": "mv",
+    "named": false
+  },
+  {
+    "type": "navigate",
     "named": false
   },
   {
@@ -2390,6 +3582,10 @@
   },
   {
     "type": "none",
+    "named": false
+  },
+  {
+    "type": "normal-mode",
     "named": false
   },
   {
@@ -2413,8 +3609,20 @@
     "named": false
   },
   {
+    "type": "now-ms",
+    "named": false
+  },
+  {
     "type": "null",
-    "named": true
+    "named": false
+  },
+  {
+    "type": "number",
+    "named": false
+  },
+  {
+    "type": "obj",
+    "named": false
   },
   {
     "type": "octal_number",
@@ -2441,7 +3649,11 @@
     "named": false
   },
   {
-    "type": "parallel",
+    "type": "pair",
+    "named": false
+  },
+  {
+    "type": "panels",
     "named": false
   },
   {
@@ -2454,6 +3666,10 @@
   },
   {
     "type": "parse-elf",
+    "named": false
+  },
+  {
+    "type": "parse-ini",
     "named": false
   },
   {
@@ -2474,6 +3690,10 @@
   },
   {
     "type": "password-gen",
+    "named": false
+  },
+  {
+    "type": "path",
     "named": false
   },
   {
@@ -2501,11 +3721,11 @@
     "named": false
   },
   {
-    "type": "prime",
+    "type": "print",
     "named": false
   },
   {
-    "type": "print",
+    "type": "printf",
     "named": false
   },
   {
@@ -2514,6 +3734,18 @@
   },
   {
     "type": "processes",
+    "named": false
+  },
+  {
+    "type": "progress",
+    "named": false
+  },
+  {
+    "type": "project",
+    "named": false
+  },
+  {
+    "type": "prompt",
     "named": false
   },
   {
@@ -2537,6 +3769,10 @@
     "named": false
   },
   {
+    "type": "rad-to-deg",
+    "named": false
+  },
+  {
     "type": "random",
     "named": false
   },
@@ -2549,11 +3785,39 @@
     "named": false
   },
   {
+    "type": "raw-mode",
+    "named": false
+  },
+  {
+    "type": "read",
+    "named": false
+  },
+  {
     "type": "read-bytes",
     "named": false
   },
   {
+    "type": "read-char",
+    "named": false
+  },
+  {
+    "type": "read-key",
+    "named": false
+  },
+  {
+    "type": "readlink",
+    "named": false
+  },
+  {
+    "type": "realpath",
+    "named": false
+  },
+  {
     "type": "recon",
+    "named": false
+  },
+  {
+    "type": "record",
     "named": false
   },
   {
@@ -2563,6 +3827,18 @@
   {
     "type": "regular_variable",
     "named": true
+  },
+  {
+    "type": "reject",
+    "named": false
+  },
+  {
+    "type": "reload",
+    "named": false
+  },
+  {
+    "type": "remove-at",
+    "named": false
   },
   {
     "type": "repeat",
@@ -2585,7 +3861,19 @@
     "named": false
   },
   {
+    "type": "reverse-video",
+    "named": false
+  },
+  {
+    "type": "rgb",
+    "named": false
+  },
+  {
     "type": "rm",
+    "named": false
+  },
+  {
+    "type": "robots",
     "named": false
   },
   {
@@ -2601,11 +3889,11 @@
     "named": false
   },
   {
-    "type": "run-tests",
+    "type": "scp-upload",
     "named": false
   },
   {
-    "type": "scp-upload",
+    "type": "screen-size",
     "named": false
   },
   {
@@ -2621,6 +3909,14 @@
     "named": false
   },
   {
+    "type": "scroll-by",
+    "named": false
+  },
+  {
+    "type": "scroll-to",
+    "named": false
+  },
+  {
     "type": "select",
     "named": false
   },
@@ -2629,7 +3925,39 @@
     "named": false
   },
   {
+    "type": "seq-char",
+    "named": false
+  },
+  {
+    "type": "seq-date",
+    "named": false
+  },
+  {
+    "type": "serve",
+    "named": false
+  },
+  {
+    "type": "session-get",
+    "named": false
+  },
+  {
+    "type": "session-set",
+    "named": false
+  },
+  {
     "type": "set",
+    "named": false
+  },
+  {
+    "type": "set-add",
+    "named": false
+  },
+  {
+    "type": "set-contains",
+    "named": false
+  },
+  {
+    "type": "set-diff",
     "named": false
   },
   {
@@ -2637,15 +3965,19 @@
     "named": false
   },
   {
-    "type": "sha1",
+    "type": "set-intersect",
     "named": false
   },
   {
-    "type": "sha256",
+    "type": "set-remove",
     "named": false
   },
   {
-    "type": "sha512",
+    "type": "set-to-list",
+    "named": false
+  },
+  {
+    "type": "set-union",
     "named": false
   },
   {
@@ -2681,11 +4013,15 @@
     "named": false
   },
   {
+    "type": "sort",
+    "named": false
+  },
+  {
     "type": "sort-by",
     "named": false
   },
   {
-    "type": "spawn",
+    "type": "source",
     "named": false
   },
   {
@@ -2733,7 +4069,59 @@
     "named": false
   },
   {
+    "type": "stor-clear",
+    "named": false
+  },
+  {
+    "type": "stor-create",
+    "named": false
+  },
+  {
+    "type": "stor-delete",
+    "named": false
+  },
+  {
+    "type": "stor-get",
+    "named": false
+  },
+  {
+    "type": "stor-insert",
+    "named": false
+  },
+  {
+    "type": "stor-list",
+    "named": false
+  },
+  {
+    "type": "str",
+    "named": false
+  },
+  {
+    "type": "str-distance",
+    "named": false
+  },
+  {
+    "type": "str-pad-left",
+    "named": false
+  },
+  {
+    "type": "str-pad-right",
+    "named": false
+  },
+  {
+    "type": "strike",
+    "named": false
+  },
+  {
+    "type": "string",
+    "named": false
+  },
+  {
     "type": "strings",
+    "named": false
+  },
+  {
+    "type": "sudo",
     "named": false
   },
   {
@@ -2745,7 +4133,31 @@
     "named": false
   },
   {
+    "type": "symlink",
+    "named": false
+  },
+  {
     "type": "sys-info",
+    "named": false
+  },
+  {
+    "type": "table",
+    "named": false
+  },
+  {
+    "type": "table-columns",
+    "named": false
+  },
+  {
+    "type": "table-print",
+    "named": false
+  },
+  {
+    "type": "table-rows",
+    "named": false
+  },
+  {
+    "type": "tail",
     "named": false
   },
   {
@@ -2757,7 +4169,19 @@
     "named": false
   },
   {
+    "type": "task",
+    "named": false
+  },
+  {
+    "type": "tee",
+    "named": false
+  },
+  {
     "type": "term",
+    "named": false
+  },
+  {
+    "type": "term-size",
     "named": false
   },
   {
@@ -2765,7 +4189,23 @@
     "named": false
   },
   {
+    "type": "theme",
+    "named": false
+  },
+  {
+    "type": "timeit",
+    "named": false
+  },
+  {
+    "type": "timeout",
+    "named": false
+  },
+  {
     "type": "timestamp",
+    "named": false
+  },
+  {
+    "type": "timezones",
     "named": false
   },
   {
@@ -2781,7 +4221,23 @@
     "named": false
   },
   {
+    "type": "to-duration",
+    "named": false
+  },
+  {
+    "type": "to-filesize",
+    "named": false
+  },
+  {
     "type": "to-float",
+    "named": false
+  },
+  {
+    "type": "to-html",
+    "named": false
+  },
+  {
+    "type": "to-ini",
     "named": false
   },
   {
@@ -2793,7 +4249,27 @@
     "named": false
   },
   {
+    "type": "to-md",
+    "named": false
+  },
+  {
+    "type": "to-msgpack",
+    "named": false
+  },
+  {
     "type": "to-string",
+    "named": false
+  },
+  {
+    "type": "to-table",
+    "named": false
+  },
+  {
+    "type": "to-timestamp",
+    "named": false
+  },
+  {
+    "type": "to-timezone",
     "named": false
   },
   {
@@ -2813,7 +4289,19 @@
     "named": false
   },
   {
+    "type": "tr",
+    "named": false
+  },
+  {
     "type": "traceroute",
+    "named": false
+  },
+  {
+    "type": "transpose",
+    "named": false
+  },
+  {
+    "type": "tree",
     "named": false
   },
   {
@@ -2829,7 +4317,27 @@
     "named": false
   },
   {
+    "type": "tuple",
+    "named": false
+  },
+  {
+    "type": "tuple-get",
+    "named": false
+  },
+  {
+    "type": "tuple-to-list",
+    "named": false
+  },
+  {
     "type": "type",
+    "named": false
+  },
+  {
+    "type": "typeof",
+    "named": false
+  },
+  {
+    "type": "umask",
     "named": false
   },
   {
@@ -2838,6 +4346,14 @@
   },
   {
     "type": "uniq",
+    "named": false
+  },
+  {
+    "type": "unique",
+    "named": false
+  },
+  {
+    "type": "unsetenv",
     "named": false
   },
   {
@@ -2861,11 +4377,23 @@
     "named": false
   },
   {
+    "type": "url-join",
+    "named": false
+  },
+  {
+    "type": "url-parse",
+    "named": false
+  },
+  {
     "type": "use",
     "named": false
   },
   {
     "type": "uuid",
+    "named": false
+  },
+  {
+    "type": "validate",
     "named": false
   },
   {
@@ -2881,7 +4409,15 @@
     "named": false
   },
   {
+    "type": "walk",
+    "named": false
+  },
+  {
     "type": "watch",
+    "named": false
+  },
+  {
+    "type": "wc",
     "named": false
   },
   {
@@ -2925,6 +4461,10 @@
     "named": false
   },
   {
+    "type": "window",
+    "named": false
+  },
+  {
     "type": "windows",
     "named": false
   },
@@ -2945,10 +4485,6 @@
     "named": false
   },
   {
-    "type": "ws-send",
-    "named": false
-  },
-  {
     "type": "xor",
     "named": false
   },
@@ -2961,11 +4497,27 @@
     "named": false
   },
   {
+    "type": "zip-record",
+    "named": false
+  },
+  {
     "type": "{",
     "named": false
   },
   {
     "type": "|",
+    "named": false
+  },
+  {
+    "type": "|!",
+    "named": false
+  },
+  {
+    "type": "|>",
+    "named": false
+  },
+  {
+    "type": "|?",
     "named": false
   },
   {

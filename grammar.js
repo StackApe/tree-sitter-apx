@@ -1,19 +1,24 @@
 /**
  * Tree-sitter grammar for ApX (APEX Command Language)
  * @see docs/ApX_SPEC.md for language specification
+ * @version 0.3.50 - WASM Game Dev Commands
  */
 
 const PREC = {
   COMMAND: 1,
   PIPE: 2,
-  OR: 3,
-  AND: 4,
-  COMPARE: 5,
-  ADD: 6,
-  MULT: 7,
-  UNARY: 8,
-  CALL: 9,
-  MEMBER: 10,
+  APPEND_PIPE: 2,    // |>
+  NULL_PIPE: 2,      // |?
+  ERROR_PIPE: 2,     // |!
+  NULL_COALESCE: 3,  // ??
+  OR: 4,
+  AND: 5,
+  COMPARE: 6,
+  ADD: 7,
+  MULT: 8,
+  UNARY: 9,
+  CALL: 10,
+  MEMBER: 11,
 };
 
 module.exports = grammar({
@@ -29,6 +34,9 @@ module.exports = grammar({
     [$.record, $.closure, $.block],
     [$.closure, $.block],
     [$.flag_with_value, $.flag],
+    [$.lambda_parameter, $.typed_parameter],
+    [$.closure_parameters, $.lambda],
+    [$.range, $.brace_expansion],
   ],
 
   word: $ => $.identifier,
@@ -40,16 +48,22 @@ module.exports = grammar({
     _statement: $ => choice(
       $.assignment,
       $.variable_assignment,
+      $.compound_assignment,
       $.if_statement,
       $.for_statement,
       $.while_statement,
+      $.loop_statement,
       $.match_statement,
+      $.decorated_definition,
       $.function_definition,
       $.macro_definition,
       $.alias_definition,
       $.try_statement,
       $.test_definition,
+      $.enum_definition,
+      $.object_definition,
       $.import_statement,
+      $.source_statement,
       $.return_statement,
       $.break_statement,
       $.continue_statement,
@@ -72,10 +86,10 @@ module.exports = grammar({
       $.command_expression,
     ),
 
-    // Pipeline - the core of ApX
+    // Pipeline - the core of ApX (includes |>, |?, |!)
     pipeline: $ => prec.left(PREC.PIPE, seq(
       $._non_pipe_expression,
-      repeat1(seq('|', $._non_pipe_expression)),
+      repeat1(seq(choice('|', '|>', '|?', '|!'), $._non_pipe_expression)),
     )),
 
     primary_expression: $ => choice(
@@ -87,19 +101,27 @@ module.exports = grammar({
       $.variable,
       $.list,
       $.record,
+      $.tuple,
+      $.set,
       $.range,
       $.closure,
+      $.lambda,
       $.parenthesized_expression,
+      $.command_substitution,
+      $.input_process_substitution,
+      $.output_process_substitution,
+      $.brace_expansion,
     ),
 
     parenthesized_expression: $ => seq('(', $._expression, ')'),
 
     // Binary expressions with precedence
     binary_expression: $ => choice(
+      prec.left(PREC.NULL_COALESCE, seq($._non_pipe_expression, '??', $._non_pipe_expression)),
       prec.left(PREC.OR, seq($._non_pipe_expression, choice('or', '||'), $._non_pipe_expression)),
       prec.left(PREC.AND, seq($._non_pipe_expression, choice('and', '&&'), $._non_pipe_expression)),
-      prec.left(PREC.COMPARE, seq($._non_pipe_expression, choice('==', '!=', '<', '>', '<=', '>='), $._non_pipe_expression)),
-      prec.left(PREC.ADD, seq($._non_pipe_expression, choice('+', '-'), $._non_pipe_expression)),
+      prec.left(PREC.COMPARE, seq($._non_pipe_expression, choice('==', '!=', '<', '>', '<=', '>=', '=~', '!~'), $._non_pipe_expression)),
+      prec.left(PREC.ADD, seq($._non_pipe_expression, choice('+', '-', '++'), $._non_pipe_expression)),
       prec.left(PREC.MULT, seq($._non_pipe_expression, choice('*', '/', '%'), $._non_pipe_expression)),
     ),
 
@@ -239,10 +261,55 @@ module.exports = grammar({
     closure_parameters: $ => seq(
       '|',
       optional(seq(
-        $.identifier,
-        repeat(seq(',', $.identifier)),
+        $.typed_parameter,
+        repeat(seq(',', $.typed_parameter)),
       )),
       '|',
+    ),
+
+    // Lambda syntax: |$x| { $x * 2 } or |$x, $y| { $x + $y }
+    lambda: $ => prec(2, seq(
+      '|',
+      optional(seq(
+        $.lambda_parameter,
+        repeat(seq(',', $.lambda_parameter)),
+      )),
+      '|',
+      optional(seq('->', $.type_hint)),
+      $.block,
+    )),
+
+    lambda_parameter: $ => seq(
+      $.variable,
+      optional(seq(':', $.type_hint)),
+    ),
+
+    // Tuple: (1, 2, 3) or tuple [1, 2, 3]
+    tuple: $ => choice(
+      seq('(', $._expression, ',', $._expression, repeat(seq(',', $._expression)), optional(','), ')'),
+      seq('tuple', '[', optional(seq($._expression, repeat(seq(',', $._expression)), optional(','))), ']'),
+    ),
+
+    // Set: set[1, 2, 3]
+    set: $ => seq('set', '[', optional(seq($._expression, repeat(seq(',', $._expression)), optional(','))), ']'),
+
+    // Command substitution: $(command)
+    command_substitution: $ => seq('$(', $._expression, ')'),
+
+    // Input process substitution: <(command)
+    input_process_substitution: $ => seq('<(', $._expression, ')'),
+
+    // Output process substitution: >(command)
+    output_process_substitution: $ => seq('>(', $._expression, ')'),
+
+    // Brace expansion: {a,b,c} or {1..5}
+    brace_expansion: $ => seq(
+      '{',
+      choice(
+        seq($._expression, repeat1(seq(',', $._expression))),  // {a,b,c}
+        seq($.integer, '..', $.integer),                        // {1..5}
+      ),
+      '}',
     ),
 
     // Control flow
@@ -278,6 +345,9 @@ module.exports = grammar({
       $._expression,
       $.block,
     ),
+
+    // Infinite loop: loop { ... }
+    loop_statement: $ => seq('loop', $.block),
 
     match_statement: $ => seq(
       'match',
@@ -319,12 +389,38 @@ module.exports = grammar({
       $.block,
     ),
 
-    // Function definition
+    // Decorated definitions (function or test with @decorator)
+    decorated_definition: $ => seq(
+      repeat1($.decorator),
+      choice($.function_definition, $.test_definition),
+    ),
+
+    // Decorator: @name or @name "arg" or @name n
+    decorator: $ => seq(
+      '@',
+      $.identifier,
+      optional(choice($.string, $.number)),
+    ),
+
+    // Function definition with optional type hints
     function_definition: $ => seq(
       'fn',
       $.identifier,
       $.parameter_list,
+      optional(seq('->', $.type_hint)),
       $.block,
+    ),
+
+    // Type hints: int, float, string, bool, list, record, etc.
+    type_hint: $ => choice(
+      seq($.type_name, '?'),  // Optional type: int?
+      $.type_name,
+    ),
+
+    type_name: $ => choice(
+      'int', 'float', 'number', 'string', 'bool', 'list', 'record',
+      'tuple', 'set', 'closure', 'path', 'duration', 'filesize',
+      'task', 'enum', 'any', 'null',
     ),
 
     parameter_list: $ => seq(
@@ -336,9 +432,17 @@ module.exports = grammar({
       ')',
     ),
 
+    // Parameter with optional type hint and default value
     parameter: $ => seq(
-      $.identifier,
+      choice($.variable, $.identifier),
+      optional(seq(':', $.type_hint)),
       optional(seq('=', $._expression)),
+    ),
+
+    // Typed parameter for closures
+    typed_parameter: $ => seq(
+      choice($.variable, $.identifier),
+      optional(seq(':', $.type_hint)),
     ),
 
     // Macro definition
@@ -364,10 +468,50 @@ module.exports = grammar({
       $.block,
     ),
 
+    // Enum definition: enum Status { pending, active, done }
+    enum_definition: $ => seq(
+      'enum',
+      $.identifier,
+      '{',
+      optional(seq(
+        $.identifier,
+        repeat(seq(',', $.identifier)),
+        optional(','),
+      )),
+      '}',
+    ),
+
+    // Object definition: obj Name { field1, field2, ... }
+    object_definition: $ => seq(
+      'obj',
+      $.identifier,
+      '{',
+      optional(seq(
+        $.object_field,
+        repeat(seq(',', $.object_field)),
+        optional(','),
+      )),
+      '}',
+    ),
+
+    object_field: $ => choice(
+      // Regular field
+      $.identifier,
+      // Method definition
+      seq('fn', $.identifier, $.parameter_list, $.block),
+    ),
+
     // Import statement
     import_statement: $ => choice(
-      seq('use', $.module_path),
-      seq('from', $.module_path, 'import', $.import_list),
+      seq('use', choice($.module_path, $.string)),
+      seq('from', choice($.module_path, $.string), 'import', $.import_list),
+    ),
+
+    // Source statement: source "file" or source "file" as namespace
+    source_statement: $ => seq(
+      'source',
+      $.string,
+      optional(seq('as', $.identifier)),
     ),
 
     module_path: $ => seq(
@@ -408,6 +552,13 @@ module.exports = grammar({
       $._expression,
     )),
 
+    // Compound assignment: $var += 1, $var -= 2, etc.
+    compound_assignment: $ => prec.right(seq(
+      $.variable,
+      choice('+=', '-=', '*=', '/=', '%='),
+      $._expression,
+    )),
+
     // Command expression - any identifier followed by arguments
     // This handles both built-in and user-defined commands
     // Higher precedence to capture arguments greedily
@@ -430,92 +581,181 @@ module.exports = grammar({
       $.identifier,
     ),
 
-    // All built-in commands as simple tokens for highlighting
+    // All built-in commands (524 from interpreter.rs) - v0.3.50
     builtin_command: $ => choice(
-      // I/O
-      'echo', 'print', 'pwd', 'cd', 'run', 'prime', 'input', 'cat',
-      // File operations
-      'touch', 'cp', 'mv', 'rm', 'ls', 'll', 'mkdir',
-      'exists', 'is-file', 'is-dir', 'write', 'append-file',
-      'read-bytes', 'write-bytes', 'file-size', 'file-info', 'file-type',
-      // List operations
-      'count', 'length', 'first', 'last', 'take', 'skip', 'get',
-      'reverse', 'append', 'prepend', 'flatten', 'uniq', 'sum', 'avg',
-      'min', 'max', 'range', 'enumerate', 'compact', 'zip',
-      // Filters
-      'where', 'each', 'select', 'sort-by', 'group-by', 'any', 'all', 'none',
-      // String operations
+      // I/O Commands
+      'echo', 'print', 'pwd', 'cd', 'cat', 'read', 'input', 'run',
+      // File Operations
+      'touch', 'cp', 'mv', 'rm', 'ls', 'll', 'mkdir', 'ln', 'symlink',
+      'chmod', 'chown', 'chgrp', 'umask', 'home',
+      'exists', 'file-info', 'file-size', 'file-type', 'file-test',
+      'write', 'append-file', 'read-bytes', 'write-bytes',
+      'is-file', 'is-dir', 'is-symlink', 'glob', 'walk', 'tree',
+      'basename', 'dirname', 'realpath', 'readlink',
+      // List Operations
+      'count', 'length', 'len', 'first', 'last', 'take', 'skip', 'get', 'head', 'tail',
+      'reverse', 'append', 'prepend', 'flatten', 'uniq', 'unique', 'sum', 'avg',
+      'min', 'max', 'range', 'enumerate', 'compact', 'zip', 'zip-record',
+      'chunks', 'window', 'pair', 'insert-at', 'remove-at', 'has',
+      // Pipeline Filters
+      'where', 'each', 'select', 'sort', 'sort-by', 'group-by',
+      'any', 'all', 'none', 'filter', 'map', 'find', 'reject',
+      'mapfile', 'tee', 'cut',
+      // String Operations
       'upper', 'lower', 'trim', 'split', 'join', 'replace', 'lines',
-      'contains', 'starts-with', 'ends-with', 'empty', 'chars', 'char-at',
-      'slice', 'find', 'pad-left', 'pad-right', 'repeat', 'capitalize', 'title-case',
-      // Math
+      'contains', 'starts-with', 'ends-with', 'empty',
+      'chars', 'char-at', 'slice', 'index-of',
+      'pad-left', 'pad-right', 'str-pad-left', 'str-pad-right',
+      'repeat', 'capitalize', 'title-case',
+      'str', 'str-distance', 'byte-len', 'bytes', 'bytes-at', 'bytes-slice',
+      'bytes-find', 'bytes-replace', 'bytes-concat', 'brace-expand',
+      'wc', 'tr', 'diff',
+      // Math Commands
       'abs', 'round', 'ceil', 'floor', 'pow', 'sqrt',
-      'sin', 'cos', 'tan', 'log', 'log10', 'exp',
-      'band', 'bor', 'bxor', 'bnot', 'shl', 'shr',
-      // Git
-      'git-status', 'git-log', 'git-branch', 'git-diff',
-      'git-add', 'git-commit', 'git-push', 'git-pull', 'git-stash',
-      // Network
-      'http-get', 'http-post', 'http-serve', 'download',
-      'dns-lookup', 'ptr-lookup', 'whois', 'port-scan',
-      'ip-addr', 'ping', 'netstat', 'ip-route', 'ip-link',
-      'traceroute', 'arp', 'headers', 'recon',
-      'wifi-scan', 'wifi-status', 'wifi-connect', 'wifi-disconnect',
-      'wifi-saved', 'wifi-forget',
-      'bt-status', 'bt-devices', 'bt-scan', 'bt-connect',
-      'bt-disconnect', 'bt-pair', 'bt-power', 'bt-remove',
-      'firewall-status', 'firewall-rules', 'firewall-allow', 'firewall-deny',
-      'ws-connect', 'ws-send', 'ws-echo',
-      // Crypto
-      'md5', 'sha1', 'sha256', 'sha512', 'blake2b', 'blake2s', 'hash-file',
-      'hmac-sha256', 'crc32', 'rot13', 'caesar', 'xor',
-      'aes-encrypt', 'aes-decrypt', 'jwt-decode',
-      'password-gen', 'entropy', 'random-bytes', 'uuid',
-      'base64-encode', 'base64-decode', 'hex-encode', 'hex-decode',
-      'url-encode', 'url-decode', 'hex-dump',
-      'strings', 'binary-info', 'parse-elf', 'parse-pe',
-      'symbols', 'disassemble', 'analyze',
-      'hash-id', 'detect-encoding', 'decode-auto',
-      // System
-      'sys-info', 'mem-info', 'cpu-info', 'disk-info',
-      'processes', 'loadavg', 'uptime', 'launch',
-      'hostname', 'os', 'which', 'env', 'set-env',
-      'monitors', 'screenshot', 'screenshot-region', 'screenshot-window', 'windows',
-      'clipboard-read', 'clipboard-write', 'browser-open',
-      'notify', 'notify-urgent', 'notify-progress',
-      'audio-play', 'audio-beep', 'audio-volume',
-      'spawn-process', 'kill-process', 'process-list',
-      // Data formats
+      'sin', 'cos', 'tan', 'log', 'exp',
+      'clamp', 'lerp', 'distance', 'angle', 'deg-to-rad', 'rad-to-deg',
+      // Bitwise Operations
+      'band', 'bor', 'bxor', 'bnot', 'shl', 'shr', 'bshl', 'bshr', 'brol', 'bror',
+      // Colors & Formatting
+      'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'bold', 'dim', 'underline',
+      'italic', 'blink', 'strike', 'normal-mode', 'reverse-video',
+      'bg-black', 'bg-blue', 'bg-cyan', 'bg-green', 'bg-magenta',
+      'bg-red', 'bg-rgb', 'bg-white', 'bg-yellow',
+      'rgb', 'color', 'hex', 'ansi-test',
+      // Data Formats
       'parse-json', 'from-json', 'to-json',
       'parse-yaml', 'to-yaml',
       'parse-toml', 'to-toml',
       'parse-csv', 'to-csv',
+      'from-html', 'to-html', 'to-md',
+      'from-ini', 'parse-ini', 'to-ini',
+      'from-msgpack', 'to-msgpack',
+      'from-ssv', 'from-table', 'to-table',
+      'table', 'table-columns', 'table-rows', 'table-print',
+      // Date/Time
+      'now', 'now-ms', 'timestamp', 'date', 'parse-date', 'format-date',
+      'date-add', 'date-diff', 'date-parse', 'seq-date',
+      'from-timestamp', 'to-timestamp', 'to-timezone', 'timezones', 'cal',
+      'duration-ms', 'duration-ns', 'duration-secs', 'to-duration', 'elapsed',
+      // Filesize
+      'filesize-bytes', 'filesize-kb', 'filesize-mb', 'to-filesize',
+      // Git Commands
+      'git-status', 'git-log', 'git-branch', 'git-diff',
+      'git-add', 'git-commit', 'git-push', 'git-pull',
+      // Crypto & Hashing
+      'hash-file', 'hash-id',
+      'caesar', 'xor', 'rot13',
+      'aes-encrypt', 'aes-decrypt', 'jwt-decode',
+      'password-gen', 'entropy', 'random-bytes', 'uuid',
+      // Encoding
+      'hex-encode', 'hex-decode', 'hex-dump',
+      'url-encode', 'url-decode', 'url-parse', 'url-join',
+      // Network Commands
+      'dns-lookup', 'ptr-lookup', 'whois', 'port-scan',
+      'ip-addr', 'ping', 'netstat', 'ip-route', 'ip-link', 'traceroute', 'arp',
+      'headers', 'recon', 'robots',
+      // HTTP Commands
+      'http-get', 'http-post', 'http-put', 'http-delete', 'http-patch',
+      'http-head', 'http-options', 'http-request', 'http-serve',
+      'download', 'fetch', 'serve',
+      // WiFi Commands
+      'wifi-scan', 'wifi-status', 'wifi-connect', 'wifi-disconnect',
+      'wifi-saved', 'wifi-forget',
+      // Bluetooth Commands
+      'bt-status', 'bt-devices', 'bt-scan', 'bt-connect', 'bt-disconnect',
+      'bt-pair', 'bt-power', 'bt-remove',
+      // Firewall Commands
+      'firewall-status', 'firewall-rules', 'firewall-allow', 'firewall-deny',
+      // Binary Analysis
+      'strings', 'binary-info', 'parse-elf', 'parse-pe', 'symbols', 'disassemble',
+      'analyze', 'detect-encoding', 'decode-auto',
+      // WebSocket
+      'ws-connect', 'ws-echo',
+      // Database - SQLite
       'sqlite-create', 'sqlite-exec', 'sqlite-query', 'sqlite-tables', 'sqlite-schema',
-      'qr-encode', 'qr-save',
-      'now', 'timestamp', 'date', 'parse-date', 'format-date', 'date-add',
+      // Storage Commands
+      'stor-create', 'stor-insert', 'stor-get', 'stor-delete', 'stor-list', 'stor-clear',
+      // Archive
       'zip', 'unzip',
-      'pdf-create', 'pdf-text',
-      'md-to-html', 'md-parse', 'md-strip',
-      // Image
-      'img-open', 'img-save', 'img-size', 'img-info', 'img-pixel',
-      'img-resize', 'img-thumbnail', 'img-crop', 'img-rotate',
-      'img-flip-h', 'img-flip-v', 'img-grayscale', 'img-brighten',
-      'img-contrast', 'img-blur', 'img-invert', 'img-close', 'img-list',
-      // Panel control
-      'open', 'close', 'toggle', 'focus', 'hsplit', 'vsplit', 'edit', 'term',
-      // AI
-      'ai-ask', 'ai-models', 'ala',
-      // Utility
-      'help', 'version', 'type', 'sleep', 'random', 'clear', 'beep',
-      'aliases', 'assert', 'assert-eq', 'debug', 'seq', 'keys', 'values',
-      'watch', 'confirm', 'choose', 'exec',
-      'to-int', 'to-float', 'to-string', 'to-bool',
-      'matches', 'match-regex', 'replace-regex', 'split-regex', 'capture-groups', 'grep',
+      // Notifications
+      'notify', 'notify-urgent', 'notify-progress', 'alert',
+      // Audio
+      'audio-play', 'audio-beep', 'audio-volume', 'beep',
+      // QR Code
+      'qr-encode', 'qr-save',
+      // Email
       'email-validate', 'email-send',
+      // SSH/SCP
       'ssh-exec', 'scp-upload',
-      'spawn', 'await', 'parallel',
-      'run-tests',
-      'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'bold', 'dim', 'underline',
+      // PDF
+      'pdf-create', 'pdf-text',
+      // Markdown
+      'md-to-html', 'md-parse', 'md-strip',
+      // Screenshots & Display
+      'monitors', 'screenshot', 'screenshot-region', 'screenshot-window', 'windows',
+      'screen-size',
+      // System Monitoring
+      'sys-info', 'mem-info', 'cpu-info', 'disk-info', 'processes', 'loadavg', 'uptime',
+      'launch', 'hostname', 'os', 'which', 'env', 'set-env', 'unsetenv',
+      'spawn-process', 'kill-process', 'process-list',
+      'term', 'term-size',
+      // Cursor & Terminal
+      'cursor-hide', 'cursor-show', 'cursor-move', 'raw-mode',
+      // Canvas/Image (WASM)
+      'canvas-circle', 'canvas-clear', 'canvas-fill', 'canvas-line',
+      'canvas-rect', 'canvas-resize', 'canvas-size', 'canvas-text',
+      'canvas-image', 'canvas-sprite', 'canvas-save', 'canvas-restore',
+      'canvas-rotate', 'canvas-scale', 'canvas-translate', 'canvas-alpha',
+      'canvas-mouse',
+      // Collision Detection (WASM)
+      'collide-rect', 'collide-point', 'collide-circle',
+      // Regex Commands
+      'matches', 'match-regex', 'replace-regex', 'split-regex', 'capture-groups', 'grep',
+      // Type Conversion
+      'to-int', 'to-float', 'to-string', 'to-bool',
+      // Type Predicates
+      'is-int', 'is-float', 'is-number', 'is-string', 'is-bool', 'is-list',
+      'is-record', 'is-null', 'is-closure', 'is-path', 'is-tuple', 'is-set',
+      'is-enum', 'is-task', 'is-duration', 'is-filesize', 'is-empty',
+      'is-table', 'is-terminal', 'is-defined',
+      // Set Operations
+      'set-add', 'set-contains', 'set-diff', 'set-intersect',
+      'set-remove', 'set-to-list', 'set-union',
+      // Tuple Operations (tuple literal handled by tuple rule)
+      'tuple-get', 'tuple-to-list',
+      // Functional Commands
+      'transpose',
+      // Utility Commands
+      'help', 'version', 'type', 'typeof', 'sleep', 'random', 'clear',
+      'aliases', 'assert', 'debug', 'describe', 'inspect',
+      'seq', 'seq-char', 'keys', 'values',
+      'watch', 'confirm', 'choose', 'exec',
+      'validate', 'getopts', 'sudo',
+      'btw', 'progress', 'prompt', 'project', 'explore', 'theme',
+      // Clipboard & Browser
+      'clipboard-read', 'clipboard-write', 'browser-open', 'browser-confirm',
+      // Panel Control (APEX GUI)
+      'open', 'close', 'toggle', 'focus', 'hsplit', 'vsplit', 'edit', 'panels',
+      // Timer/Async Commands
+      'after', 'every', 'timeout', 'elapsed', 'timeit',
+      // Session/Local Storage (WASM)
+      'session-get', 'session-set', 'local-get', 'local-set', 'local-remove',
+      // Location/Navigation (WASM)
+      'location', 'location-hash', 'location-host', 'location-path', 'location-search',
+      'navigate', 'reload', 'history-back', 'history-forward', 'history-search',
+      // DOM Manipulation (WASM)
+      'dom-get', 'dom-set', 'dom-query', 'dom-create', 'dom-remove',
+      'dom-attr', 'dom-style', 'dom-html', 'dom-class-add', 'dom-class-remove',
+      // Input/Keyboard (WASM)
+      'input-value', 'input-set', 'input-focus', 'input-checked', 'input-listen',
+      'key-wait', 'key-down', 'key-pressed', 'key-available', 'read-key', 'read-char',
+      // Mouse (WASM)
+      'mouse-pos', 'mouse-x', 'mouse-y', 'mouse-down',
+      // Scroll (WASM)
+      'scroll-to', 'scroll-by',
+      // Console (WASM)
+      'console-log', 'error', 'printf',
+      // Note: 'set' literal handled by set rule, 'tuple' by tuple rule
     ),
 
     // Arguments - includes bare identifiers for commands like "sort-by name"
