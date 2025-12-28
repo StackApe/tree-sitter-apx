@@ -1,0 +1,41 @@
+{
+  "name": "tree-sitter-apx",
+  "version": "0.3.54",
+  "description": "Tree-sitter grammar for ApX (APEX Command Language)",
+  "main": "bindings/node",
+  "keywords": [
+    "parser",
+    "tree-sitter",
+    "apx",
+    "apex"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apex-pde/tree-sitter-apx"
+  },
+  "author": "APEX PDE",
+  "license": "MIT",
+  "dependencies": {
+    "nan": "^2.17.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.20.8"
+  },
+  "scripts": {
+    "build": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.apx",
+      "injection-regex": "^apx$",
+      "file-types": [
+        "apx",
+        "apxrc"
+      ],
+      "highlights": "queries/highlights.scm",
+      "locals": "queries/locals.scm"
+    }
+  ]
+}

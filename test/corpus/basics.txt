@@ -1,0 +1,156 @@
+================================================================================
+Comments
+================================================================================
+
+# This is a comment
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment
+    (line_comment)))
+
+================================================================================
+Variables
+================================================================================
+
+$name
+$env.HOME
+$it
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (primary_expression (variable (regular_variable)))
+  (primary_expression (variable (env_variable)))
+  (primary_expression (variable (special_variable))))
+
+================================================================================
+Numbers
+================================================================================
+
+42
+3.14
+0xff
+0b1010
+0o777
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (primary_expression (number (integer)))
+  (primary_expression (number (float)))
+  (primary_expression (number (hex_number)))
+  (primary_expression (number (binary_number)))
+  (primary_expression (number (octal_number))))
+
+================================================================================
+Strings
+================================================================================
+
+"hello"
+'world'
+r"raw\nstring"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (primary_expression (string (double_string)))
+  (primary_expression (string (single_string)))
+  (primary_expression (string (raw_string))))
+
+================================================================================
+Lists and Records
+================================================================================
+
+[1, 2, 3]
+{name: "apex", version: 1}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (primary_expression (list
+    (primary_expression (number (integer)))
+    (primary_expression (number (integer)))
+    (primary_expression (number (integer)))))
+  (primary_expression (record
+    (record_field (identifier) (primary_expression (string (double_string))))
+    (record_field (identifier) (primary_expression (number (integer)))))))
+
+================================================================================
+Pipeline
+================================================================================
+
+1..10 | sum
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (pipeline
+    (primary_expression (range (integer) (integer)))
+    (command_expression (command_name (builtin_command)))))
+
+================================================================================
+If Statement
+================================================================================
+
+if $x > 0 {
+  echo "positive"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (binary_expression
+      (primary_expression (variable (regular_variable)))
+      (primary_expression (number (integer))))
+    (block
+      (command_expression
+        (command_name (builtin_command))
+        (argument (primary_expression (string (double_string))))))))
+
+================================================================================
+Function Definition
+================================================================================
+
+fn greet(name) {
+  echo "Hello"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list (parameter (identifier)))
+    (block
+      (command_expression
+        (command_name (builtin_command))
+        (argument (primary_expression (string (double_string))))))))
+
+================================================================================
+Built-in Commands
+================================================================================
+
+git-status
+wifi-scan
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (command_expression (command_name (builtin_command)))
+  (command_expression (command_name (builtin_command))))
+
+================================================================================
+Assignment
+================================================================================
+
+let x = 42
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment
+    (identifier)
+    (primary_expression (number (integer)))))
